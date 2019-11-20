@@ -5,10 +5,10 @@
  */
 package User;
 
+import Controlador.Cliente_sql;
 import Controlador.conexion;
 import Entidad.Cliente;
 import UI.ImageViewer;
-import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.ByteArrayInputStream;
@@ -18,15 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicSpinnerUI;
-import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -35,6 +29,7 @@ import javax.swing.text.MaskFormatter;
 public class modUsuario extends javax.swing.JPanel {
     
     public Cliente este;
+    Cliente_sql api;
     /**
      * Creates new form NewJPanel
      */
@@ -118,7 +113,10 @@ public class modUsuario extends javax.swing.JPanel {
             }
         });
     }
-
+    
+    public void cargarApi(Cliente_sql papa){
+        this.api = papa;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -257,22 +255,20 @@ public class modUsuario extends javax.swing.JPanel {
             String nombrE = nombre.getText();
             String datE = dia.getText()+"/"+mes.getText()+"/"+anio.getText();
             if (global.evaluarCadena(nombrE) && global.evaluarFecha(datE)){
-                ResultSet rs = global.editCliente(dpI, nombrE, datE);
-                try {
-                    if(rs.next()){
-                        JOptionPane.showMessageDialog(null, "Registro modificado!");
-                        this.dpi.setText("");
-                        this.nombre.setText("");
-                        this.dia.setText("");
-                        this.mes.setText("");
-                        this.anio.setText("");
-                    }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(null, "El registro ya no esta disponible!");
-                    }
-                } catch (SQLException ex) {
-                    System.out.println(ex);
+                int ret = api.editCliente(dpI, nombrE, datE);
+                if (ret == 1){
+                    this.dpi.setText("");
+                    this.nombre.setText("");
+                    this.dia.setText("");
+                    this.mes.setText("");
+                    this.anio.setText("");
+                    JOptionPane.showMessageDialog(null, "Registro modificado!");
+                    
+                }
+                else if (ret == -1){
+                    JOptionPane.showMessageDialog(null, "El usuario: " +dpI+ " ya existe");
+                }
+                else{
                     JOptionPane.showMessageDialog(null, "Intente mas tarde");
                 }
             }

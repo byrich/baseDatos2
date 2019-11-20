@@ -5,6 +5,7 @@
  */
 package UI;
 
+import Controlador.Operador_sql;
 import Controlador.conexion;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -18,19 +19,19 @@ import javax.swing.JOptionPane;
  * @author Byrich
  */
 public class Logins extends javax.swing.JDialog {
-    
+    Operador_sql api;
     /**
      * Creates new form LoginI
      */
     public Logins(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jTextField1.addKeyListener(new KeyAdapter() {
+        idUsuario.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 int key = (int)e.getKeyChar();
                 if (!(key < 58 && key > 47)) {
-                    jTextField1.setText("");
+                    idUsuario.setText("");
                     jLabel3.setText("* El id de usuario solo admite digitos");
                 }
                 else{
@@ -40,7 +41,9 @@ public class Logins extends javax.swing.JDialog {
         });
     }
 
-    
+     public void cargarApi(Operador_sql papa){
+        this.api = papa;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,10 +55,10 @@ public class Logins extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        idUsuario = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        pass = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
 
         jLabel1.setText("Id de usuario");
@@ -80,9 +83,9 @@ public class Logins extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
+                            .addComponent(idUsuario)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addGap(33, 33, 33))
@@ -103,13 +106,13 @@ public class Logins extends javax.swing.JDialog {
                         .addContainerGap()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(idUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -118,41 +121,37 @@ public class Logins extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
         conexion global = conexion.getInstance();
-        String user = this.jTextField1.getText();
-        String pass = this.jPasswordField1.getText();
-        if (user.isEmpty() || pass.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Ningun campo puede estar vacio");
-        }
-        else{
-            if (global.evaluarCadena(pass)){
-                ResultSet rs = global.autenticar(user, pass);
-                try {
-                    if (rs.next()){
-                        int tipo = rs.getInt(1);
-                        
-                        JOptionPane.showMessageDialog(null, "bienvenido");
-                        Principal_ui s = (Principal_ui) this.getParent();
-                        
-                        if (tipo == 1){
-                            s.activar();
-                        }
-                        else
-                        {   
-                            s.activarAdmin();
-                        }
-                        this.dispose();
+        if (idUsuario.getText().isEmpty() || pass.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Ningun campo puede estar vacio!");
+        } 
+        else
+        {
+            String nombrE = idUsuario.getText();
+            String pasS = pass.getText();
+            if (global.evaluarCadena(pasS)){
+                int ret = api.login(nombrE, pasS);
+                if (ret != -1){
+                    this.idUsuario.setText("");
+                    this.pass.setText("");
+                    JOptionPane.showMessageDialog(null, "Bienvenido!");
+                    Principal_ui s = (Principal_ui) this.getParent();
+                    if (ret == 1){//operador normal
+                        s.activar();
                     }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecta");
+                    else
+                    {// administrador
+                        s.activarAdmin();
                     }
-                } catch (SQLException ex) {
-                    System.out.println(ex);
-                    JOptionPane.showMessageDialog(null, "Intente mas tarde");
+                    this.dispose();
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, "Datos incorrectos");
                 }
             }
             else{
-                JOptionPane.showMessageDialog(null, "Formato de datos incorrectos");
+                JOptionPane.showMessageDialog(null, "Algunos campos contienen caracteres no permitidos");
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -201,11 +200,11 @@ public class Logins extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField idUsuario;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField pass;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,40 +5,31 @@
  */
 package Operador;
 
+import Controlador.Operador_sql;
 import Controlador.conexion;
 import Entidad.Agencia;
-import Entidad.Operador;
-import java.awt.Component;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import Entidad.Rol;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicSpinnerUI;
-import javax.swing.text.MaskFormatter;
 
 /**
  *
  * @author Byrich
  */
 public class regOperador extends javax.swing.JPanel {
+    Operador_sql api;
     
     /**
      * Creates new form NewJPanel
      */
     public regOperador() {
         initComponents();
-        update();
+        
     }
     
     public void update(){
-        conexion global = conexion.getInstance();
-        ResultSet rs = global.getAgencias();
+        ResultSet rs = api.getAgencias();
         try {
             while(rs.next()){
                 Agencia ag = new Agencia(rs.getInt(1),rs.getString(2),rs.getInt(3));
@@ -47,6 +38,20 @@ public class regOperador extends javax.swing.JPanel {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
+        rs = api.getRoles();
+        try {
+            while(rs.next()){
+                Rol ag = new Rol(rs.getInt(1),rs.getString(2),rs.getInt(3));
+                this.jComboBox2.addItem(ag);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public void cargarApi(Operador_sql papa){
+        this.api = papa;
+        update();
     }
 
     /**
@@ -67,6 +72,8 @@ public class regOperador extends javax.swing.JPanel {
         pass = new javax.swing.JPasswordField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
 
         jLabel2.setText("Nombre");
 
@@ -85,6 +92,8 @@ public class regOperador extends javax.swing.JPanel {
 
         jLabel6.setText("Agencia");
 
+        jLabel7.setText("Rol");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -101,7 +110,9 @@ public class regOperador extends javax.swing.JPanel {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
                     .addComponent(pass, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(33, 33, 33)
@@ -126,17 +137,21 @@ public class regOperador extends javax.swing.JPanel {
                         .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
-                .addComponent(jLabel6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addGap(93, 93, 93)
                         .addComponent(submit))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(266, 266, 266))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -152,18 +167,15 @@ public class regOperador extends javax.swing.JPanel {
             String nombrE = nombre.getText();
             String pasS = pass.getText();
             Agencia tmp = (Agencia) this.jComboBox1.getSelectedItem();
+            Rol tmp2 = (Rol) this.jComboBox2.getSelectedItem();
             if (global.evaluarCadena(nombrE) && global.evaluarCadena(pasS)){
-                ResultSet rs = global.addOperador(nombrE, pasS,tmp.id);
-                try {
-                    if(rs.next()){
-                        JOptionPane.showMessageDialog(null, "Registro Creado!");
-                    }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(null, "Intente mas tarde");
-                    }
-                } catch (SQLException ex) {
-                    System.out.println(ex);
+                int ret = api.agregarOperador(nombrE, pasS, (int) tmp.id, 1, tmp2.id);
+                if (ret == 1){
+                    this.nombre.setText("");
+                    this.pass.setText("");
+                    JOptionPane.showMessageDialog(null, "Registro Creado!");
+                }
+                else {
                     JOptionPane.showMessageDialog(null, "Intente mas tarde");
                 }
             }
@@ -176,11 +188,13 @@ public class regOperador extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Agencia> jComboBox1;
+    private javax.swing.JComboBox<Rol> jComboBox2;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField nombre;
     private javax.swing.JPasswordField pass;
     private javax.swing.JButton submit;

@@ -5,11 +5,9 @@
  */
 package Agencias;
 
+import Controlador.Agencia_sql;
 import Controlador.conexion;
 import Entidad.Agencia;
-import Entidad.Cliente;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,6 +17,8 @@ import javax.swing.JOptionPane;
 public class modAgencia extends javax.swing.JPanel {
     
     public Agencia este;
+    Agencia_sql api;
+    
     /**
      * Creates new form NewJPanel
      */
@@ -121,25 +121,30 @@ public class modAgencia extends javax.swing.JPanel {
             String dpI = dpi.getText();
             String nombrE = nombre.getText();
             if (global.evaluarCadena(nombrE)){
-                ResultSet rs = global.editAgencia(nombrE, dpI);
-                try {
-                    if(rs.next()){
-                        JOptionPane.showMessageDialog(null, "Registro modificado!");
-                        this.dpi.setText("");
-                        this.nombre.setText("");
-                    }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(null, "El registro ya no esta disponible!");
-                    }
-                } catch (SQLException ex) {
-                    System.out.println(ex);
+                int ret = api.editAgencia(dpI,nombrE);
+                if (ret == 1){
+                    this.nombre.setText("");
+                    JOptionPane.showMessageDialog(null, "Registro modificado!");
+                }
+                else if (ret == -1){
+                    JOptionPane.showMessageDialog(null, "El usuario: " +dpI+ " ya no existe");
+                }
+                else {
                     JOptionPane.showMessageDialog(null, "Intente mas tarde");
                 }
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Algunos campos contienen caracteres no permitidos");
             }
         }
     }//GEN-LAST:event_submitActionPerformed
 
+    
+    public void cargarApi(Agencia_sql papa, Agencia actual){
+        this.api = papa;
+        Cargar(actual);
+    } 
+    
     public void Cargar(Agencia actual){
         este = actual;
         this.dpi.setText(actual.id+"");

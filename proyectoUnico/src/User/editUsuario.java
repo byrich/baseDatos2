@@ -5,12 +5,9 @@
  */
 package User;
 
-import User.modUsuario;
-import Controlador.conexion;
+import Controlador.Cliente_sql;
 import Entidad.Cliente;
 import UI.Principal_ui;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -22,15 +19,20 @@ import javax.swing.table.DefaultTableModel;
 public class editUsuario extends javax.swing.JPanel {
     ArrayList<Cliente> cli;
     public Principal_ui papa;
+    Cliente_sql api;
     /**
      * Creates new form editUsuario
      */
     public editUsuario() {
         initComponents();
-        update();
+        //update();
     }
 
     public void update(){
+        Object resutl[]= api.getClientes();
+        cli = (ArrayList<Cliente>) resutl[0];
+        this.jTable1.setModel((DefaultTableModel) resutl[1]);
+        /*
         cli = new ArrayList();
         conexion global = conexion.getInstance();
         ResultSet rs = global.getClientes();
@@ -56,8 +58,14 @@ public class editUsuario extends javax.swing.JPanel {
             this.jTable1.setModel(dtm);
         } catch (SQLException ex) {
             System.out.println(ex);
-        }
+        }*/
     }
+    
+    public void cargarApi(Cliente_sql papa){
+        this.api = papa;
+        update();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -136,7 +144,6 @@ public class editUsuario extends javax.swing.JPanel {
         // TODO add your handling code here:
         //System.out.println("sdf");
         //update();
-
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -151,6 +158,7 @@ public class editUsuario extends javax.swing.JPanel {
             panel.setBounds(0,0, 606, 351);
             //panel.Cargar(cli.get(actual).dpi+"", cli.get(actual).nombre, cli.get(actual).fec_nac);
             panel.Cargar(cli.get(actual));
+            panel.cargarApi(this.api);
             papa.remove(papa.actual);
             papa.repaint();
             papa.actual = panel;
@@ -170,22 +178,17 @@ public class editUsuario extends javax.swing.JPanel {
         }
         else{
             Long dpi = cli.get(actual).dpi;
-            conexion global = conexion.getInstance();
-            ResultSet rs = global.downCliente(dpi+"");
-            try {
-                if(rs.next()){
-                    update();
-                    JOptionPane.showMessageDialog(null, "Usuario eliminado con exito");
-                }
-                else{
-                    update();
-                    JOptionPane.showMessageDialog(null, "El regsitro ya no esta disponible");
-                }
-                
-            } catch (SQLException ex) {
-                System.out.println(ex);
+            int ret = api.delCliente(dpi+"");
+            if (ret == 1){
+                JOptionPane.showMessageDialog(null, "Registro Eliminado!");
+            }
+            else if (ret == -1){
+                JOptionPane.showMessageDialog(null, "El usuario: " +dpi+ " ya no existe");
+            }
+            else{
                 JOptionPane.showMessageDialog(null, "Intente mas tarde");
             }
+            update();
         }
 
     }//GEN-LAST:event_jButton3ActionPerformed

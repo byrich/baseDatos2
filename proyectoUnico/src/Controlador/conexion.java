@@ -5,22 +5,15 @@
  */
 package Controlador;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -30,7 +23,7 @@ public class conexion {
     
     private static conexion cone;
     private ResultSet rs;
-    private Connection conn;
+    public Connection conn;
     private Statement stmt;
     
     private conexion() {
@@ -69,132 +62,6 @@ public class conexion {
         return runSql(sql);
     }
     
-    // registro de cliente
-    public boolean addCliente(String dpi, String nombre, String date, File foto, File firma){
-        String sql = String.format(
-               "Insert into Cliente (dpi,nombre,fecha_nacimiento,estado) values (%s,'%s','%s',1)"
-                //"Insert into cliente (dpi,nombre,firma,foto,fecha_nacimiento) values (%s,'%s','firma','foto','%s')"
-                , dpi
-                , nombre
-                ,date
-        );
-        
-        try {  
-            this.rs= this.stmt.executeQuery(sql);
-            if (rs.next()){
-                String sqls = String.format("update cliente set foto=? where dpi=%s"
-                ,dpi
-                );
-                PreparedStatement myStmt = conn.prepareStatement(sqls);
-                FileInputStream input;
-                try {
-                    input = new FileInputStream(foto);
-                    myStmt.setBinaryStream(1, input);
-                    myStmt.executeUpdate();
-                    input.close();
-                    myStmt.close();
-                    String sqls2 = String.format("update cliente set firma=? where dpi=%s"
-                    ,dpi
-                    );
-                    myStmt = conn.prepareStatement(sqls2);
-                    FileInputStream input1;
-                    try {
-                        input1 = new FileInputStream(firma);
-                        myStmt.setBinaryStream(1, input1);
-                        myStmt.executeUpdate();
-                        input1.close();
-                        myStmt.close();
-                    } catch (FileNotFoundException ex) {
-                        return false;
-                    } catch (IOException ex) {
-                        return false;
-                    }
-                } catch (FileNotFoundException ex) {
-                    return false;
-                } catch (IOException ex) {
-                    return false;
-                }
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-            return false;
-        }
-        return true;
-    }
-    
-    // listado de clientes
-    public ResultSet getClientes(){
-        String sql = "Select * from cliente where estado = 1";
-        return runSql(sql);
-    }
-    
-    // datos del cliente* falta
-    public ResultSet getCliente(String dpi, String nombre, String date){
-        String sql = String.format(
-               "Insert into cliente (dpi,nombre,firma,foto,fecha_nacimiento,estado) values (%s,'%s','firma','foto','%s',1)"
-                , dpi
-                , nombre
-                ,date
-        );
-        return runSql(sql);
-    }
-    
-    // modificar datos del cliente
-    public ResultSet editCliente(String dpi, String nombre, String date){
-        String sql = String.format(
-               "Update cliente set nombre='%s' , fecha_nacimiento = '%s' WHERE dpi = %s and estado = 1"
-                , nombre
-                , date
-                , dpi
-        );
-        return runSql(sql);
-    }
-    
-    // dar de baja a cliente
-    public ResultSet downCliente(String dpi){
-        String sql = String.format(
-               "UPDATE cliente SET estado = 0 WHERE dpi = %s and estado = 1"
-                , dpi
-        );
-        return runSql(sql);
-    }
-    
-    // registro de operador
-    public ResultSet addOperador(String nombre, String pass, long id_agencia){
-        String sql = String.format(
-               "Insert into operador (nombre,estado,password,Agencia_id_agencia,Terminal_id_terminal,Rol_id_rol) values ('%s',1,'%s',%d,1,2)"
-                , nombre
-                , pass
-                ,id_agencia
-        );
-        return runSql(sql);
-    }
-    
-    public ResultSet editOperador(String id,String nombre, String pass, long id_agencia){
-        String sql = String.format(
-               "Update operador set nombre='%s' , password = '%s', Agencia_id_agencia = %d WHERE id_operador = %s and estado = 1"
-                , nombre
-                , pass
-                , id_agencia
-                ,id
-        );
-        return runSql(sql);
-    }
-    
-    // listado de operadores
-    public ResultSet getOperadores(){
-        String sql = "Select * from operador where estado = 1";
-        return runSql(sql);
-    }
-    
-    // dar de baja a cliente
-    public ResultSet downOperador(String dpi){
-        String sql = String.format(
-               "UPDATE operador SET estado = 0 WHERE dpi = %s and estado = 1"
-                , dpi
-        );
-        return runSql(sql);
-    }
     
     // registro de agencia
     public ResultSet addAgencia(String nombre){
@@ -207,9 +74,51 @@ public class conexion {
     
     public ResultSet editAgencia(String nombre,String id){
         String sql = String.format(
-               "Update agencia set nombre='%s' WHERE id_operador = %s and estado = 1"
+               "Update agencia set nombre='%s' WHERE id_agencia = %s and estado = 1"
                 , nombre
                 ,id
+        );
+        return runSql(sql);
+    }
+    
+    // registro de cuenta
+    public boolean addCuenta(String dpi){
+        String sql = "select cuenta_seq.NEXTVAL from dual";
+        try {
+            this.rs= this.stmt.executeQuery(sql);
+            if (rs.next()){
+                String id = this.rs.getLong(1)+"";
+                String id2 = id+"0";
+                String addCuen = String.format(
+                    "Insert into cuenta (cuenta,estado,cantidad) values ('%s',1,0)"
+                     , id
+                );
+                String addCliCuen = String.format(
+                    "Insert into Cliente_cuenta (Cuenta_cuenta,id_cliente_cuenta,Cliente_dpi) values (%s,%s,%s)"
+                     , id
+                     , id2
+                     , dpi
+                );
+                runSql(addCuen);
+                runSql(addCliCuen);
+                return true;
+            }
+        } catch (SQLException ex) {
+            return false;
+        }
+        return false;
+    }
+    
+    public ResultSet getCuentas(){
+        String sql = "Select * from cuenta where estado = 1";
+        return runSql(sql);
+    }
+    // dar de baja a cliente
+    public ResultSet depositar(String monto,String id){
+        String sql = String.format(
+               "UPDATE cuenta SET cantidad = cantidad + %s WHERE cuenta = %s and estado = 1"
+                , monto
+                , id
         );
         return runSql(sql);
     }
@@ -222,7 +131,7 @@ public class conexion {
     
     public ResultSet downAgencia(String dpi){
         String sql = String.format(
-               "UPDATE agencia SET estado = 0 WHERE dpi = %s and estado = 1"
+               "UPDATE agencia SET estado = 0 WHERE id_agencia = %s and estado = 1"
                 , dpi
         );
         return runSql(sql);

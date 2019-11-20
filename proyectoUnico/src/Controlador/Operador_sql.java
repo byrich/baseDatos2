@@ -116,6 +116,30 @@ public class Operador_sql {
         return rs;
     }
    
+    
+    public int login(String nombre, String pass){
+        conexion global = conexion.getInstance();
+        ResultSet rs = null;
+        try {
+            // llamada a la funcion
+            CallableStatement cstmt = global.conn.prepareCall("{ ? = call login(?,?)}");
+            // parametros de entrada
+            cstmt.setString(2, nombre);
+            cstmt.setString(3, pass);
+            //retorno 
+            cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+            //ejecutamos...
+            cstmt.execute();
+            //capturamos resultado (1 logro registrar, -1 el usuario ya existe)
+            int respuesta = ((OracleCallableStatement)cstmt).getInt(1);
+            return respuesta;
+        } catch (SQLException ex) {
+            // error dentro de la DB
+        }
+        return -1;
+    }
+    
+    
     public int delOperador(String dpi){
         conexion global = conexion.getInstance();
         try {

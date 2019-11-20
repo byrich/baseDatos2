@@ -10,11 +10,11 @@ package Entidad;
  * @author Byrich
  */
 public class Agencia {
-    public long id;
+    public int id;
     public String nombre;
     public int estado;
 
-    public Agencia(long id, String nombre, int estado) {
+    public Agencia(int id, String nombre, int estado) {
         this.id = id;
         this.nombre = nombre;
         this.estado = estado;

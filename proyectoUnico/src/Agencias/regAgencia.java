@@ -5,31 +5,17 @@
  */
 package Agencias;
 
-import User.*;
+
+import Controlador.Agencia_sql;
 import Controlador.conexion;
-import UI.ImageViewer;
-import java.awt.Component;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.plaf.basic.BasicSpinnerUI;
-import javax.swing.text.MaskFormatter;
 
 /**
  *
  * @author Byrich
  */
 public class regAgencia extends javax.swing.JPanel {
-
+    Agencia_sql api;
 
     /**
      * Creates new form NewJPanel
@@ -124,17 +110,12 @@ public class regAgencia extends javax.swing.JPanel {
         {
             String nombrE = nombre.getText();
             if (global.evaluarCadena(nombrE)){
-                ResultSet rs = global.addAgencia(nombrE);
-                try {
-                    if(rs.next()){
-                        JOptionPane.showMessageDialog(null, "Registro Creado!");
-                    }
-                    else
-                    {
-                        JOptionPane.showMessageDialog(null, "Intente mas tarde");
-                    }
-                } catch (SQLException ex) {
-                    System.out.println(ex);
+                int ret = api.agregarAgencia(nombrE);
+                if (ret == 1){
+                    this.nombre.setText("");
+                    JOptionPane.showMessageDialog(null, "Registro Creado!");
+                }
+                else {
                     JOptionPane.showMessageDialog(null, "Intente mas tarde");
                 }
             }
@@ -144,8 +125,13 @@ public class regAgencia extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_submitActionPerformed
 
+    public void cargarApi(Agencia_sql papa){
+        this.api = papa;
+    }
+    
     private void nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombreActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_nombreActionPerformed
 
 
