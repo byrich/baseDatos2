@@ -86,3 +86,23 @@ begin
     end if;
     return -1;
 end;
+
+create or replace FUNCTION login
+
+    (
+    miId int,
+    miPass varchar
+    )
+return number
+as
+total int;
+mirol int;
+begin 
+    total := 0;
+    select count(nombre) into total from operador where id_operador = miid and password = mipass and estado = 1;
+    if total > 0 then
+        select rol_id_rol into mirol from operador where id_operador = miid and password = mipass;
+        return mirol;
+    end if;
+    return -1;
+end;

@@ -5,9 +5,12 @@
  */
 package Operador;
 
-import Controlador.Operador_sql;
+import User.modUsuario;
+import Controlador.conexion;
 import Entidad.Operador;
 import UI.Principal_ui;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,24 +22,41 @@ import javax.swing.table.DefaultTableModel;
 public class editOperador extends javax.swing.JPanel {
     ArrayList<Operador> oper;
     public Principal_ui papa;
-    Operador_sql api;
-    
     /**
      * Creates new form editUsuario
      */
     public editOperador() {
         initComponents();
+        update();
     }
 
     public void update(){
-        Object resutl[]= api.getOperadores();
-        oper = (ArrayList<Operador>) resutl[0];
-        this.jTable1.setModel((DefaultTableModel) resutl[1]);
-    }
-    
-    public void cargarApi(Operador_sql papa){
-        this.api = papa;
-        update();
+        oper = new ArrayList();
+        conexion global = conexion.getInstance();
+        ResultSet rs = global.getOperadores();
+        String[] columnNames = {"Nombre"};
+        Object[][] data={};
+        DefaultTableModel dtm= new DefaultTableModel(data, columnNames);
+        this.jTable1.setModel(dtm);
+        try {
+            while(rs.next()){
+                Operador clie = new Operador(rs.getLong(1),rs.getString(2),rs.getString(4),rs.getLong(5));
+                oper.add(clie);
+                System.out.println(clie);
+            }
+            int x = 0;
+            int fin = oper.size();
+            Object[][] datos = new Object[oper.size()][2];
+            while (x < fin){
+                Object temp[] = {oper.get(x).nombre};
+                datos[x]= temp;
+                x++;
+            }
+            dtm= new DefaultTableModel(datos, columnNames);
+            this.jTable1.setModel(dtm);
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -129,7 +149,7 @@ public class editOperador extends javax.swing.JPanel {
         else{
             modOperador panel = new modOperador();
             panel.setBounds(0,0, 606, 351);
-            panel.cargarApi(api, oper.get(actual));
+            panel.Cargar(oper.get(actual));
             papa.remove(papa.actual);
             papa.repaint();
             papa.actual = panel;
@@ -148,18 +168,23 @@ public class editOperador extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Seleccione un registro!");
         }
         else{
-            long dpi = oper.get(actual).id;
-            int ret = api.delOperador(dpi+"");
-            if (ret == 1){
-                JOptionPane.showMessageDialog(null, "Registro Eliminado!");
-            }
-            else if (ret == -1){
-                JOptionPane.showMessageDialog(null, "El usuario: " +dpi+ " ya no existe");
-            }
-            else{
+            Long dpi = oper.get(actual).id;
+            conexion global = conexion.getInstance();
+            ResultSet rs = global.downOperador(dpi+"");
+            try {
+                if(rs.next()){
+                    update();
+                    JOptionPane.showMessageDialog(null, "Usuario eliminado con exito");
+                }
+                else{
+                    update();
+                    JOptionPane.showMessageDialog(null, "El regsitro ya no esta disponible");
+                }
+                
+            } catch (SQLException ex) {
+                System.out.println(ex);
                 JOptionPane.showMessageDialog(null, "Intente mas tarde");
             }
-            update();
         }
 
     }//GEN-LAST:event_jButton3ActionPerformed

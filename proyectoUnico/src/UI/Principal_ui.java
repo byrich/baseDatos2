@@ -5,18 +5,10 @@
  */
 package UI;
 
-import Agencias.editAgencia;
 import Agencias.regAgencia;
-import Controlador.Agencia_sql;
-import Controlador.Cliente_sql;
-import Controlador.Cuenta_sql;
-import Controlador.Operador_sql;
-import Cuenta.deposito;
-import Cuenta.editCuenta;
 import Cuenta.regCuenta;
 import Operador.editOperador;
 import Operador.regOperador;
-import User.darAlta;
 import User.editUsuario;
 import User.regUsuario;
 import java.awt.Component;
@@ -27,19 +19,11 @@ import java.awt.Component;
  */
 public class Principal_ui extends javax.swing.JFrame {
     public Component actual;
-    public Cliente_sql apiCliente;
-    public Operador_sql apiOperador;
-    public Agencia_sql apiAgencia;
-    public Cuenta_sql apiCuenta;
     /**
      * Creates new form Principal_ui
      */
     public Principal_ui() {
         initComponents();
-        apiCliente = new Cliente_sql();
-        apiOperador = new Operador_sql();
-        apiAgencia = new Agencia_sql();
-        apiCuenta = new Cuenta_sql();
     }
 
     /**
@@ -57,15 +41,10 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem12 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu9 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
-        jMenu10 = new javax.swing.JMenu();
-        jMenuItem13 = new javax.swing.JMenuItem();
-        jMenuItem14 = new javax.swing.JMenuItem();
-        jMenuItem15 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -119,14 +98,6 @@ public class Principal_ui extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem2);
 
-        jMenuItem12.setText("Dar de alta");
-        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem12ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem12);
-
         jMenu1.add(jMenu3);
 
         jMenuBar1.add(jMenu1);
@@ -144,27 +115,9 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenu9.add(jMenuItem9);
 
         jMenuItem10.setText("editar");
-        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem10ActionPerformed(evt);
-            }
-        });
         jMenu9.add(jMenuItem10);
 
         jMenu2.add(jMenu9);
-
-        jMenu10.setText("Depositar");
-
-        jMenuItem13.setText("cheque");
-        jMenu10.add(jMenuItem13);
-
-        jMenuItem14.setText("transferencia");
-        jMenu10.add(jMenuItem14);
-
-        jMenuItem15.setText("efectivo");
-        jMenu10.add(jMenuItem15);
-
-        jMenu2.add(jMenu10);
 
         jMenuBar1.add(jMenu2);
 
@@ -205,11 +158,6 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenu8.add(jMenuItem7);
 
         jMenuItem8.setText("Editar");
-        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem8ActionPerformed(evt);
-            }
-        });
         jMenu8.add(jMenuItem8);
 
         jMenu7.add(jMenu8);
@@ -258,7 +206,6 @@ public class Principal_ui extends javax.swing.JFrame {
         this.remove(actual);
         this.repaint();
         regUsuario panel = new regUsuario();
-        panel.cargarApi(apiCliente);
         actual = panel;
         this.add(panel);
         panel.setBounds(0,0, 606, 351);
@@ -273,7 +220,6 @@ public class Principal_ui extends javax.swing.JFrame {
         editUsuario panel = new editUsuario();
         actual = panel;
         panel.papa = this;
-        panel.cargarApi(apiCliente);
         this.add(panel);
         panel.setBounds(0,0, 606, 351);
         panel.updateUI();
@@ -311,7 +257,6 @@ public class Principal_ui extends javax.swing.JFrame {
         regOperador panel = new regOperador();
         actual = panel;
         this.add(panel);
-        panel.cargarApi(this.apiOperador);
         panel.setBounds(0,0, 606, 351);
         panel.updateUI();
     }//GEN-LAST:event_jMenuItem5ActionPerformed
@@ -323,7 +268,6 @@ public class Principal_ui extends javax.swing.JFrame {
         editOperador panel = new editOperador();
         actual = panel;
         panel.papa = this;
-        panel.cargarApi(apiOperador);
         this.add(panel);
         panel.setBounds(0,0, 606, 351);
         panel.updateUI();
@@ -336,7 +280,6 @@ public class Principal_ui extends javax.swing.JFrame {
         regAgencia panel = new regAgencia();
         actual = panel;
         this.add(panel);
-        panel.cargarApi(apiAgencia);
         panel.setBounds(0,0, 606, 351);
         panel.updateUI();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
@@ -349,49 +292,9 @@ public class Principal_ui extends javax.swing.JFrame {
         actual = panel;
         panel.papa = this;
         this.add(panel);
-        panel.cargarApi(apiCuenta);
         panel.setBounds(0,0, 606, 351);
         panel.updateUI();
     }//GEN-LAST:event_jMenuItem9ActionPerformed
-
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        // TODO add your handling code here:
-        this.remove(actual);
-        this.repaint();
-        editAgencia panel = new editAgencia();
-        actual = panel;
-        panel.papa = this;
-        this.add(panel);
-        panel.cargarApi(apiAgencia);
-        panel.setBounds(0,0, 606, 351);
-        panel.updateUI();
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
-
-    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
-        // TODO add your handling code here:
-        this.remove(actual);
-        this.repaint();
-        darAlta panel = new darAlta();
-        actual = panel;
-        panel.papa = this;
-        panel.cargarApi(apiCliente);
-        this.add(panel);
-        panel.setBounds(0,0, 606, 351);
-        panel.updateUI();
-    }//GEN-LAST:event_jMenuItem12ActionPerformed
-
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        // TODO add your handling code here:
-        this.remove(actual);
-        this.repaint();
-        editCuenta panel = new editCuenta();
-        actual = panel;
-        panel.papa = this;
-        panel.cargarApi(apiCuenta);
-        this.add(panel);
-        panel.setBounds(0,0, 606, 351);
-        panel.updateUI();
-    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     public void activar(){
         this.jMenu1.setEnabled(!this.jMenu1.isEnabled());
@@ -442,7 +345,6 @@ public class Principal_ui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -454,10 +356,6 @@ public class Principal_ui extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
-    private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
-    private javax.swing.JMenuItem jMenuItem14;
-    private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

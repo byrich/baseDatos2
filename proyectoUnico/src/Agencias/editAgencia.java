@@ -5,9 +5,12 @@
  */
 package Agencias;
 
-import Controlador.Agencia_sql;
+import User.modUsuario;
+import Controlador.conexion;
 import Entidad.Agencia;
 import UI.Principal_ui;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -19,24 +22,40 @@ import javax.swing.table.DefaultTableModel;
 public class editAgencia extends javax.swing.JPanel {
     ArrayList<Agencia> agen;
     public Principal_ui papa;
-    Agencia_sql api;
     /**
      * Creates new form editUsuario
      */
     public editAgencia() {
         initComponents();
-        
+        update();
     }
 
     public void update(){
-        Object resutl[]= api.getAgencias();
-        agen = (ArrayList<Agencia>) resutl[0];
-        this.jTable1.setModel((DefaultTableModel) resutl[1]);
-    }
-    
-     public void cargarApi(Agencia_sql papa){
-        this.api = papa;
-        update();
+        agen = new ArrayList();
+        conexion global = conexion.getInstance();
+        ResultSet rs = global.getOperadores();
+        String[] columnNames = {"Nombre"};
+        Object[][] data={};
+        DefaultTableModel dtm= new DefaultTableModel(data, columnNames);
+        this.jTable1.setModel(dtm);
+        try {
+            while(rs.next()){
+                Agencia niu = new Agencia(rs.getLong(1),rs.getString(2),rs.getInt(3));
+                agen.add(niu);
+            }
+            int x = 0;
+            int fin = agen.size();
+            Object[][] datos = new Object[agen.size()][2];
+            while (x < fin){
+                Object temp[] = {agen.get(x).nombre};
+                datos[x]= temp;
+                x++;
+            }
+            dtm= new DefaultTableModel(datos, columnNames);
+            this.jTable1.setModel(dtm);
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -129,7 +148,7 @@ public class editAgencia extends javax.swing.JPanel {
         else{
             modAgencia panel = new modAgencia();
             panel.setBounds(0,0, 606, 351);
-            panel.cargarApi(api,agen.get(actual));
+            panel.Cargar(agen.get(actual));
             papa.remove(papa.actual);
             papa.repaint();
             papa.actual = panel;
@@ -148,18 +167,23 @@ public class editAgencia extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Seleccione un registro!");
         }
         else{
-            int dpi = agen.get(actual).id;
-            int ret = api.delAgencia(dpi+"");
-            if (ret == 1){
-                JOptionPane.showMessageDialog(null, "Registro Eliminado!");
-            }
-            else if (ret == -1){
-                JOptionPane.showMessageDialog(null, "La agencia: " +dpi+ " ya no existe");
-            }
-            else{
+            Long dpi = agen.get(actual).id;
+            conexion global = conexion.getInstance();
+            ResultSet rs = global.downAgencia(dpi+"");
+            try {
+                if(rs.next()){
+                    update();
+                    JOptionPane.showMessageDialog(null, "Usuario eliminado con exito");
+                }
+                else{
+                    update();
+                    JOptionPane.showMessageDialog(null, "El regsitro ya no esta disponible");
+                }
+                
+            } catch (SQLException ex) {
+                System.out.println(ex);
                 JOptionPane.showMessageDialog(null, "Intente mas tarde");
             }
-            update();
         }
 
     }//GEN-LAST:event_jButton3ActionPerformed

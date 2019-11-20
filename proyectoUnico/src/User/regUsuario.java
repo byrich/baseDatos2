@@ -5,7 +5,6 @@
  */
 package User;
 
-import Controlador.Cliente_sql;
 import Controlador.conexion;
 import UI.ImageViewer;
 import java.awt.event.KeyAdapter;
@@ -20,7 +19,6 @@ import javax.swing.JOptionPane;
 public class regUsuario extends javax.swing.JPanel {
     File foto;
     File firma;
-    Cliente_sql api;
 
     /**
      * Creates new form NewJPanel
@@ -104,10 +102,6 @@ public class regUsuario extends javax.swing.JPanel {
                 }
             }
         });
-    }
-    
-    public void cargarApi(Cliente_sql papa){
-        this.api = papa;
     }
 
     /**
@@ -256,23 +250,11 @@ public class regUsuario extends javax.swing.JPanel {
             String nombrE = nombre.getText();
             String date = dia.getText()+"/"+mes.getText()+"/"+anio.getText();
             if (global.evaluarCadena(nombrE)){
-                int ret = api.agregarCliente(dpI, nombrE, date,foto,firma);
-                if (ret == 1){
-                    this.dpi.setText("");
-                    this.nombre.setText("");
-                    this.dia.setText("");
-                    this.mes.setText("");
-                    this.anio.setText("");
+                if (global.addCliente(dpI, nombrE, date,foto,firma)){
                     JOptionPane.showMessageDialog(null, "Registro Creado!");
                 }
-                else if (ret == -1){
-                    JOptionPane.showMessageDialog(null, "El usuario: " +dpI+ " ya existe");
-                }
-                else if (ret == -2){
-                    JOptionPane.showMessageDialog(null, "Intente mas tarde");
-                }
                 else{
-                    JOptionPane.showMessageDialog(null, "Alguna imagen no existe!");
+                    JOptionPane.showMessageDialog(null, "Intente mas tarde");
                 }
             }
             else{

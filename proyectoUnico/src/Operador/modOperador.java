@@ -5,15 +5,23 @@
  */
 package Operador;
 
-import Controlador.Operador_sql;
 import Controlador.conexion;
 import Entidad.Agencia;
 import Entidad.Operador;
-import Entidad.Rol;
+import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.plaf.basic.BasicSpinnerUI;
+import javax.swing.text.MaskFormatter;
+
 /**
  *
  * @author Byrich
@@ -21,8 +29,6 @@ import javax.swing.JOptionPane;
 public class modOperador extends javax.swing.JPanel {
     public String passw;
     ArrayList<Agencia> agencias;
-    ArrayList<Rol> roles;
-    Operador_sql api;
     /**
      * Creates new form NewJPanel
      */
@@ -30,10 +36,10 @@ public class modOperador extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void update(int idAgen, int idRol){
+    public void update(long idAgen){
         agencias = new ArrayList();
-        roles = new ArrayList();
-        ResultSet rs = api.getAgencias();
+        conexion global = conexion.getInstance();
+        ResultSet rs = global.getAgencias();
         try {
             while(rs.next()){
                 Agencia ag = new Agencia(rs.getInt(1),rs.getString(2),rs.getInt(3));
@@ -52,32 +58,7 @@ public class modOperador extends javax.swing.JPanel {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-        rs = api.getRoles();
-        try {
-            while(rs.next()){
-                Rol ag = new Rol(rs.getInt(1),rs.getString(2),rs.getInt(3));
-                if (idAgen == ag.id){
-                    this.jComboBox2.addItem(ag);
-                }
-                else {
-                    roles.add(ag);
-                }
-            }
-            int size = roles.size() - 1;
-            while (size >= 0){
-                this.jComboBox2.addItem(roles.get(size));
-                size --;
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
     }
-    
-    public void cargarApi(Operador_sql papa, Operador actual){
-        this.api = papa;
-        Cargar(actual);
-    }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -98,8 +79,6 @@ public class modOperador extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         pass = new javax.swing.JPasswordField();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
 
         dpi.setEnabled(false);
 
@@ -120,9 +99,7 @@ public class modOperador extends javax.swing.JPanel {
 
         jLabel3.setText("Contaseña");
 
-        jLabel6.setText("Agencia");
-
-        jLabel7.setText("Rol");
+        jLabel6.setText("Contaseña");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -149,19 +126,16 @@ public class modOperador extends javax.swing.JPanel {
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(21, 21, 21))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(pass, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, 172, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, 172, Short.MAX_VALUE))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(submit)
-                        .addGap(63, 63, 63))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(63, 63, 63))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,11 +163,7 @@ public class modOperador extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(116, 116, 116))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -210,18 +180,18 @@ public class modOperador extends javax.swing.JPanel {
             String nombrE = nombre.getText();
             String pasS = pass.getText();
             Agencia tmp = (Agencia) this.jComboBox1.getSelectedItem();
-            Rol tmp2 = (Rol) this.jComboBox2.getSelectedItem();
             if (global.evaluarCadena(nombrE) && global.evaluarCadena(pasS)){
-                int ret = api.editOperador(id,nombrE, pasS, (int) tmp.id, tmp2.id);
-                if (ret == 1){
-                    this.nombre.setText("");
-                    this.pass.setText("");
-                    JOptionPane.showMessageDialog(null, "Registro modificado!");
-                }
-                else if (ret == -1){
-                    JOptionPane.showMessageDialog(null, "El usuario: " +id+ " ya no existe");
-                }
-                else {
+                ResultSet rs = global.editOperador(id,nombrE, pasS,tmp.id);
+                try {
+                    if(rs.next()){
+                        JOptionPane.showMessageDialog(null, "Registro Creado!");
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null, "Intente mas tarde");
+                    }
+                } catch (SQLException ex) {
+                    System.out.println(ex);
                     JOptionPane.showMessageDialog(null, "Intente mas tarde");
                 }
             }
@@ -235,19 +205,17 @@ public class modOperador extends javax.swing.JPanel {
         this.dpi.setText(ope.id +"");
         this.nombre.setText(ope.nombre);
         this.pass.setText(ope.pass);
-        update(ope.id_agencia,ope.id_rol);
+        update(ope.id_agencia);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField dpi;
     private javax.swing.JComboBox<Agencia> jComboBox1;
-    private javax.swing.JComboBox<Rol> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField nombre;
     private javax.swing.JPasswordField pass;
     private javax.swing.JButton submit;

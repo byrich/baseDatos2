@@ -13,15 +13,13 @@ public class Operador {
     public long id;
     public String nombre;
     public String pass;
-    public int id_agencia;
-    public int id_rol;
+    public long id_agencia;
 
-    public Operador(long id, String nombre, String pass, int id_agencia, int id_rol) {
+    public Operador(long id, String nombre, String pass, long id_agencia) {
         this.id = id;
         this.nombre = nombre;
         this.pass = pass;
         this.id_agencia = id_agencia;
-        this.id_rol = id_rol;
     }
     
     
