@@ -7,6 +7,8 @@ package UI;
 
 import Agencias.editAgencia;
 import Agencias.regAgencia;
+import Auditoria.Auditoria;
+import Cheques.IngresoCheque;
 import Controlador.Agencia_sql;
 import Controlador.Cliente_sql;
 import Controlador.Cuenta_sql;
@@ -50,6 +52,7 @@ public class Principal_ui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu12 = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -76,9 +79,15 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenu11 = new javax.swing.JMenu();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem16 = new javax.swing.JMenuItem();
+        jMenu13 = new javax.swing.JMenu();
+        jMenuItem17 = new javax.swing.JMenuItem();
+
+        jMenu12.setText("jMenu12");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -97,6 +106,8 @@ public class Principal_ui extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 351, Short.MAX_VALUE)
         );
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("Cliente");
         jMenu1.setEnabled(false);
@@ -240,18 +251,34 @@ public class Principal_ui extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu4);
 
-        setJMenuBar(jMenuBar1);
+        jMenu11.setText("Cheques");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        jMenuItem11.setText("Ingreso");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu11.add(jMenuItem11);
+
+        jMenuItem16.setText("Lectura archivo");
+        jMenu11.add(jMenuItem16);
+
+        jMenuBar1.add(jMenu11);
+
+        jMenu13.setText("Auditoria");
+
+        jMenuItem17.setText("Mostrar auditoria");
+        jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem17ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem17);
+
+        jMenuBar1.add(jMenu13);
+
+        setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -397,6 +424,26 @@ public class Principal_ui extends javax.swing.JFrame {
         panel.updateUI();
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        this.remove(actual);
+        this.repaint();
+        IngresoCheque panel = new IngresoCheque();
+        actual = panel;
+        this.add(panel, java.awt.BorderLayout.CENTER);
+        panel.setBounds(0,0, 606, 351);
+        panel.updateUI();
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
+        this.remove(actual);
+        this.repaint();
+        Auditoria panel = new Auditoria();
+        actual = panel;
+        this.add(panel, java.awt.BorderLayout.CENTER);
+        panel.setBounds(0,0, 606, 351);
+        panel.updateUI();
+    }//GEN-LAST:event_jMenuItem17ActionPerformed
+
     public void activar(){
         this.jMenu1.setEnabled(!this.jMenu1.isEnabled());
         this.jMenu2.setEnabled(!this.jMenu2.isEnabled());
@@ -447,6 +494,9 @@ public class Principal_ui extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu10;
+    private javax.swing.JMenu jMenu11;
+    private javax.swing.JMenu jMenu12;
+    private javax.swing.JMenu jMenu13;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -458,10 +508,13 @@ public class Principal_ui extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

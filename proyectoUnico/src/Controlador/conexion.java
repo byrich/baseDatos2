@@ -165,4 +165,16 @@ public class conexion {
         return matcher.matches();
     }
     
+    public int addChequeTemp(int cuenta, int cheque, float monto) throws SQLException {
+        Statement statement = conn.createStatement();
+        int rowsAffected = statement.executeUpdate("INSERT INTO TransaccionChequeTmp " + "VALUES (" + cuenta + ", " + cheque + ", " + monto + ")");
+        statement.close();
+        return rowsAffected;
+    }
+    
+    public ResultSet getTransaccion(){
+        String sql = "Select * from Transaccion";
+        return runSql(sql);
+    }
+    
 }
