@@ -28,8 +28,9 @@ public class conexion {
     
     private conexion() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:byrich","byRich","24490024");
+            //this.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:byrich","byRich","24490024");
             //this.conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.43.41:1522/BASESDATOS2","bd2","Basesdatos2");
+            this.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522:BASESDATOS2","bd2","Basesdatos2");
             stmt=conn.createStatement();  
         } catch (SQLException ex) {
             Logger.getLogger(conexion.class.getName()).log(Level.SEVERE, null, ex);
@@ -166,15 +167,40 @@ public class conexion {
     }
     
     public int addChequeTemp(int cuenta, int cheque, float monto) throws SQLException {
-        Statement statement = conn.createStatement();
-        int rowsAffected = statement.executeUpdate("INSERT INTO TransaccionChequeTmp " + "VALUES (" + cuenta + ", " + cheque + ", " + monto + ")");
-        statement.close();
+        int rowsAffected = stmt.executeUpdate("INSERT INTO TransaccionChequeTmp " + "VALUES (" + cuenta + ", " + cheque + ", " + monto + ")");
         return rowsAffected;
     }
     
     public ResultSet getTransaccion(){
         String sql = "Select * from Transaccion";
         return runSql(sql);
+    }
+    
+    public String[] getLote() throws SQLException {
+        float montoTotal = 0;
+        int documentos = 0;
+        String consulta = "Select * from TransaccionChequeTmp";
+        ResultSet rs = stmt.executeQuery(consulta);
+        String cadena = "BANCO|REFERENCIA|CUENTA|NO_CHEQUE|MONTO\n";
+        int referencia, cuenta, cheque;
+        float monto;
+        int banco = 1;
+        while (rs.next()) {
+            referencia = rs.getInt("referencia");
+            cuenta = rs.getInt("cuenta");
+            cheque = rs.getInt("cheque");
+            monto = rs.getFloat("monto");
+            montoTotal += monto;
+            cadena = banco + "|" + referencia + "|" + cuenta + "|" + cheque + "|" + monto + "\n";
+            documentos += 1;
+        }
+        String[] contenido = new String[5];
+        contenido[0] = Float.toString(montoTotal);
+        contenido[1] = Integer.toString(documentos);
+        contenido[2] = Integer.toString(banco);
+        contenido[3] = "lote";
+        contenido[4] = cadena;
+        return contenido;
     }
     
 }

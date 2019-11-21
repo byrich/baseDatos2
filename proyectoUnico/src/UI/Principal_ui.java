@@ -262,6 +262,11 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenu11.add(jMenuItem11);
 
         jMenuItem16.setText("Lectura archivo");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem16ActionPerformed(evt);
+            }
+        });
         jMenu11.add(jMenuItem16);
 
         jMenuBar1.add(jMenu11);
@@ -443,6 +448,10 @@ public class Principal_ui extends javax.swing.JFrame {
         panel.setBounds(0,0, 606, 351);
         panel.updateUI();
     }//GEN-LAST:event_jMenuItem17ActionPerformed
+
+    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        //escribir archivo
+    }//GEN-LAST:event_jMenuItem16ActionPerformed
 
     public void activar(){
         this.jMenu1.setEnabled(!this.jMenu1.isEnabled());

@@ -21,25 +21,33 @@ public class Auditoria extends javax.swing.JPanel {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) this.jTable1.getModel();
         ResultSet rs = db.getTransaccion();
         try {
-            int operacion = rs.getInt("transaccion");
-            String tipoOperacion = rs.getString("tipo");
-            java.sql.Date fecha = rs.getDate("fecha");
-            float saldoInicial = rs.getFloat("saldo_inicial");
-            float monto = rs.getFloat("valor");
-            float saldoFinal = rs.getFloat("saldo_final");
-            String usuario = rs.getString("usuario");
-            int noAutorizacion = rs.getInt("autorizacion");
-            int noRechazo = rs.getInt("no_rechazo");
-            String razonRechazo = rs.getString("razon_rechazo");
-            int cuenta = rs.getInt("cuenta");
-            int doc = rs.getInt("doc");
+            int operacion = 0;
+            String tipoOperacion = "";
+            java.sql.Date fecha = null;
+            float saldoInicial, monto, saldoFinal;
+            String usuario, razonRechazo;
+            int noAutorizacion, noRechazo, cuenta, doc;
+            while (rs.next()) {
+                operacion = rs.getInt("transaccion");
+                tipoOperacion = rs.getString("tipo");
+                fecha = rs.getDate("fecha");
+                saldoInicial = rs.getFloat("saldo_inicial");
+                monto = rs.getFloat("valor");
+                saldoFinal = rs.getFloat("saldo_final");
+                usuario = rs.getString("usuario");
+                noAutorizacion = rs.getInt("autorizacion");
+                noRechazo = rs.getInt("no_rechazo");
+                razonRechazo = rs.getString("razon_rechazo");
+                cuenta = rs.getInt("cuenta");
+                doc = rs.getInt("doc");
 
-            model.addRow(new Object[]{
-                operacion, tipoOperacion, fecha,
-                saldoInicial, monto, saldoFinal,
-                usuario, noAutorizacion, noRechazo,
-                razonRechazo, cuenta, doc
-            });
+                model.addRow(new Object[]{
+                    operacion, tipoOperacion, fecha,
+                    saldoInicial, monto, saldoFinal,
+                    usuario, noAutorizacion, noRechazo,
+                    razonRechazo, cuenta, doc
+                });
+            }
         }
         catch(Exception e) {
             System.out.println("No se pudieron leer algunas filas");
