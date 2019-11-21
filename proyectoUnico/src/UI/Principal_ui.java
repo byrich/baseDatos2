@@ -11,12 +11,14 @@ import Auditoria.Auditoria;
 import Cheques.IngresoCheque;
 import Controlador.Agencia_sql;
 import Controlador.Cliente_sql;
+import Controlador.Compensacion_sql;
 import Controlador.Cuenta_sql;
 import Controlador.Operador_sql;
 import Cuenta.editCuenta;
 import Cuenta.regCuenta;
 import Operador.editOperador;
 import Operador.regOperador;
+import User.Compensacion1;
 import User.darAlta;
 import User.editUsuario;
 import User.regUsuario;
@@ -32,6 +34,8 @@ public class Principal_ui extends javax.swing.JFrame {
     public Operador_sql apiOperador;
     public Agencia_sql apiAgencia;
     public Cuenta_sql apiCuenta;
+    public Compensacion_sql apiCompensacion;
+
     /**
      * Creates new form Principal_ui
      */
@@ -41,6 +45,8 @@ public class Principal_ui extends javax.swing.JFrame {
         apiOperador = new Operador_sql();
         apiAgencia = new Agencia_sql();
         apiCuenta = new Cuenta_sql();
+        apiCompensacion = new Compensacion_sql();
+
     }
 
     /**
@@ -84,6 +90,8 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenu13 = new javax.swing.JMenu();
         jMenuItem17 = new javax.swing.JMenuItem();
+        jMenu14 = new javax.swing.JMenu();
+        jMenuItem18 = new javax.swing.JMenuItem();
 
         jMenu12.setText("jMenu12");
 
@@ -283,6 +291,18 @@ public class Principal_ui extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu13);
 
+        jMenu14.setText("Compensacion");
+
+        jMenuItem18.setText("Leer Archivo");
+        jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem18ActionPerformed(evt);
+            }
+        });
+        jMenu14.add(jMenuItem18);
+
+        jMenuBar1.add(jMenu14);
+
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -453,6 +473,20 @@ public class Principal_ui extends javax.swing.JFrame {
         //escribir archivo
     }//GEN-LAST:event_jMenuItem16ActionPerformed
 
+    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
+        // TODO add your handling code here:
+        this.remove(actual);
+        this.repaint();
+        Compensacion1 panel = new Compensacion1();
+        panel.setVisible(true);
+        actual = panel;
+        panel.papa = this;
+        panel.cargarApi(apiCompensacion);
+        this.add(panel);
+        panel.setBounds(0,0, 606, 351);
+        panel.updateUI();
+    }//GEN-LAST:event_jMenuItem18ActionPerformed
+
     public void activar(){
         this.jMenu1.setEnabled(!this.jMenu1.isEnabled());
         this.jMenu2.setEnabled(!this.jMenu2.isEnabled());
@@ -506,6 +540,7 @@ public class Principal_ui extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu12;
     private javax.swing.JMenu jMenu13;
+    private javax.swing.JMenu jMenu14;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -524,6 +559,7 @@ public class Principal_ui extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
+    private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

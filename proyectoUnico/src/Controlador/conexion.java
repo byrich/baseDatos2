@@ -30,7 +30,7 @@ public class conexion {
         try {
             //this.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:byrich","byRich","24490024");
             //this.conn = DriverManager.getConnection("jdbc:oracle:thin:@192.168.43.41:1522/BASESDATOS2","bd2","Basesdatos2");
-            this.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522:BASESDATOS2","bd2","Basesdatos2");
+            this.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:dbproyecto","alba","1234");
             stmt=conn.createStatement();  
         } catch (SQLException ex) {
             Logger.getLogger(conexion.class.getName()).log(Level.SEVERE, null, ex);

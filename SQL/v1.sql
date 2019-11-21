@@ -1,3 +1,13 @@
+DROP TABLE Lote_Cheque;
+CREATE TABLE Lote_Cheque(
+    banco int NOT NULL,
+    referencia int NOT NULL,
+    cuenta int NOT NULL,
+    no_cheque int NOT NULL,
+    monto float NOT NULL,
+    id_lote int,
+    estado VARCHAR(50) DEFAULT 'Grabando');
+
 CREATE TABLE chequera (
 	id_chequera INT NOT NULL,
 	estado INT NOT NULL, /* 0:no entregado, 1:entregado*/
