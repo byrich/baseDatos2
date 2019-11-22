@@ -19,7 +19,8 @@ public class EscribeLote {
     public void escribirLote() throws IOException, SQLException {
         //Formato del nombre de archivo: "monto_documentos_bancoViene_idLote"
         String[] lote = db.getLote();
-        String nameFile = lote[0] + "_" + lote[1] + "_" + lote[2] + "_" + lote[3];
+        int banco = 11;
+        String nameFile = banco + "_" + lote[0] + "_" + lote[1] + "_" + lote[2] + "_" + lote[3];
         try{
             BufferedWriter writer = new BufferedWriter(new FileWriter(nameFile));
             writer.write(lote[4]);
