@@ -14,6 +14,7 @@ import Controlador.Cliente_sql;
 import Controlador.Compensacion_sql;
 import Controlador.Cuenta_sql;
 import Controlador.Operador_sql;
+import Cuenta.deposito;
 import Cuenta.editCuenta;
 import Cuenta.regCuenta;
 import Operador.editOperador;
@@ -35,6 +36,7 @@ public class Principal_ui extends javax.swing.JFrame {
     public Agencia_sql apiAgencia;
     public Cuenta_sql apiCuenta;
     public Compensacion_sql apiCompensacion;
+    public String idoperador;
 
     /**
      * Creates new form Principal_ui
@@ -108,7 +110,7 @@ public class Principal_ui extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 606, Short.MAX_VALUE)
+            .addGap(0, 600, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,6 +184,11 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenu10.add(jMenuItem14);
 
         jMenuItem15.setText("efectivo");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem15ActionPerformed(evt);
+            }
+        });
         jMenu10.add(jMenuItem15);
 
         jMenu2.add(jMenu10);
@@ -260,6 +267,7 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenuBar1.add(jMenu4);
 
         jMenu11.setText("Cheques");
+        jMenu11.setEnabled(false);
 
         jMenuItem11.setText("Ingreso");
         jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
@@ -280,6 +288,7 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenuBar1.add(jMenu11);
 
         jMenu13.setText("Auditoria");
+        jMenu13.setEnabled(false);
 
         jMenuItem17.setText("Mostrar auditoria");
         jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
@@ -292,6 +301,7 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenuBar1.add(jMenu13);
 
         jMenu14.setText("Compensacion");
+        jMenu14.setEnabled(false);
 
         jMenuItem18.setText("Leer Archivo");
         jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
@@ -355,8 +365,14 @@ public class Principal_ui extends javax.swing.JFrame {
         this.add(niu);
         niu.updateUI();
         this.repaint();
-        this.activar();
-        this.jMenu5.setEnabled(false);
+        if (this.jMenu7.isEnabled()){
+            this.activarAdmin();
+            //this.jMenu5.setEnabled(false);
+        }
+        else {
+            this.activar();
+        }
+        
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -487,16 +503,40 @@ public class Principal_ui extends javax.swing.JFrame {
         panel.updateUI();
     }//GEN-LAST:event_jMenuItem18ActionPerformed
 
+    private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+        // TODO add your handling code here:
+        this.remove(actual);
+        this.repaint();
+        deposito panel = new deposito();
+        panel.setVisible(true);
+        actual = panel;
+        panel.papa = this;
+        panel.cargarApi(apiCuenta);
+        panel.idOperador= this.idoperador;
+        this.add(panel);
+        panel.setBounds(0,0, 606, 351);
+        panel.updateUI();
+    }//GEN-LAST:event_jMenuItem15ActionPerformed
+
+    public void setIdOperador(String id){
+        this.idoperador= id;
+    }
+    
     public void activar(){
         this.jMenu1.setEnabled(!this.jMenu1.isEnabled());
         this.jMenu2.setEnabled(!this.jMenu2.isEnabled());
         this.jMenuItem3.setEnabled(!this.jMenuItem3.isEnabled());
         this.jMenuItem4.setEnabled(!this.jMenuItem4.isEnabled());
+        this.jMenu11.setEnabled(!this.jMenu11.isEnabled());
+        this.jMenu14.setEnabled(!this.jMenu14.isEnabled());
+        System.out.println(this.idoperador);
     }
     
     public void activarAdmin(){
         activar();
-        this.jMenu5.setEnabled(true);
+        this.jMenu5.setEnabled(!this.jMenu5.isEnabled());
+        this.jMenu7.setEnabled(!this.jMenu7.isEnabled());
+        this.jMenu13.setEnabled(!this.jMenu13.isEnabled());
     }
     
     /**

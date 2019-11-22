@@ -6,6 +6,7 @@
 package Cuenta;
 
 
+import Controlador.Cuenta_sql;
 import Controlador.conexion;
 import Entidad.Cuenta;
 import UI.Principal_ui;
@@ -26,6 +27,8 @@ public class deposito extends javax.swing.JPanel {
     public Principal_ui papa;
     private boolean existe;
     private String eldpi;
+    Cuenta_sql api;
+    public String idOperador;
     /**
      * Creates new form editUsuario
      */
@@ -188,27 +191,22 @@ public class deposito extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        conexion global = conexion.getInstance();
-        if (!existe){
-            update();
-            JOptionPane.showMessageDialog(null, "Ninguna cuenta encontrada");
+        String actual = dpi.getText();
+        if (actual.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Ingresar un No. cuenta");
         }
         else{
-            ResultSet rs = global.depositar(monto.getText(), eldpi);
-            try {
-                if(rs.next()){
-                    JOptionPane.showMessageDialog(null, "Registro Creado!");
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "Intente mas tarde");
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex);
+            int ret = api.depositar(actual,idOperador,monto.getText());
+            if (ret == 1){
+                JOptionPane.showMessageDialog(null, "Deposito realizado");
+            }
+            else if (ret == -1){
+                JOptionPane.showMessageDialog(null, "La cuenta: " +actual+ " no existe");
+            }
+            else{
                 JOptionPane.showMessageDialog(null, "Intente mas tarde");
             }
-    }
-        
+        } 
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -219,6 +217,7 @@ public class deposito extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
         existe = false;
         eldpi = "";
         String actual = dpi.getText();
@@ -248,7 +247,9 @@ public class deposito extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-
+    public void cargarApi(Cuenta_sql papa){
+        this.api = papa;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField dpi;
     private javax.swing.JButton jButton1;

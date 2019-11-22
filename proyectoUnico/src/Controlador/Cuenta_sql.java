@@ -62,6 +62,28 @@ public class Cuenta_sql {
         }
     }
     
+    public int depositar(String noCuenta,String operador,String cantidad){
+        conexion global = conexion.getInstance();
+        try {
+            // llamada a la funcion
+            CallableStatement cstmt = global.conn.prepareCall("{ ? = call depositarEfectivo(?,?,?)}");
+            // parametros de entrada
+            cstmt.setString(2, noCuenta);
+            cstmt.setString(3, operador);
+            cstmt.setString(4, cantidad);
+            //retorno 
+            cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+            //ejecutamos...
+            cstmt.execute();
+            //capturamos resultado (1 logro registrar, -1 el usuario ya existe)
+            int respuesta = ((OracleCallableStatement)cstmt).getInt(1);
+            return respuesta;
+        } catch (SQLException ex) {
+            // error dentro de la DB
+            return -2;
+        }
+    }
+    
     
     public int bloquearCuenta(String numCuenta){
         conexion global = conexion.getInstance();

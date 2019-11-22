@@ -137,6 +137,8 @@ public class Logins extends javax.swing.JDialog {
                     this.pass.setText("");
                     JOptionPane.showMessageDialog(null, "Bienvenido!");
                     Principal_ui s = (Principal_ui) this.getParent();
+                    System.out.println(ret);
+                    s.setIdOperador(nombrE);
                     if (ret == 1){//operador normal
                         s.activar();
                     }

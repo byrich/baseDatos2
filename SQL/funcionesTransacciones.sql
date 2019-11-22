@@ -39,7 +39,6 @@ end;
 create or replace FUNCTION depositarEfectivo
     (
     noCuenta int,
-    idAgencia int,
     idOperador int,
     newCantidad float
     )
@@ -60,7 +59,7 @@ begin
         UPDATE cuenta SET cantidad = cantidad + newCantidad WHERE cuenta = noCuenta;
         insert into 
         transaccion (id_cuenta, id_agencia, fecha,tipo,tipo_detalle, detalle, valor, Operador_id_operador)
-        values (noCuenta, idAgencia,SYSDATE,1,2,'Retiro en efectivo',newCantidad,idOperador);
+        values (noCuenta, 0,SYSDATE,1,2,'Retiro en efectivo',newCantidad,idOperador);
         
         --2 = RETIRO, 1 = DEPOSITO
         --1 = CHEQUE, 2 = EFECTIVO, 3 = TRANSFERENCIA
