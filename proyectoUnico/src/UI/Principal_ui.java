@@ -92,6 +92,7 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenuItem16 = new javax.swing.JMenuItem();
         jMenu13 = new javax.swing.JMenu();
         jMenuItem17 = new javax.swing.JMenuItem();
+        jMenuItem19 = new javax.swing.JMenuItem();
         jMenu14 = new javax.swing.JMenu();
         jMenuItem18 = new javax.swing.JMenuItem();
 
@@ -298,6 +299,14 @@ public class Principal_ui extends javax.swing.JFrame {
         });
         jMenu13.add(jMenuItem17);
 
+        jMenuItem19.setText("Reporte auditoria");
+        jMenuItem19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem19ActionPerformed(evt);
+            }
+        });
+        jMenu13.add(jMenuItem19);
+
         jMenuBar1.add(jMenu13);
 
         jMenu14.setText("Compensacion");
@@ -479,6 +488,7 @@ public class Principal_ui extends javax.swing.JFrame {
         this.remove(actual);
         this.repaint();
         Auditoria panel = new Auditoria();
+        panel.getData();
         actual = panel;
         this.add(panel, java.awt.BorderLayout.CENTER);
         panel.setBounds(0,0, 606, 351);
@@ -503,6 +513,7 @@ public class Principal_ui extends javax.swing.JFrame {
         panel.updateUI();
     }//GEN-LAST:event_jMenuItem18ActionPerformed
 
+
     private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
         // TODO add your handling code here:
         this.remove(actual);
@@ -522,6 +533,19 @@ public class Principal_ui extends javax.swing.JFrame {
         this.idoperador= id;
     }
     
+
+    private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
+        Auditoria auditoria = new Auditoria();
+        try{
+            auditoria.generarReporte();
+        }
+        catch(java.io.IOException e){
+            System.out.println(e);
+            System.out.println("error al generar reporte de auditoria :(");
+        }
+    }//GEN-LAST:event_jMenuItem19ActionPerformed
+
+
     public void activar(){
         this.jMenu1.setEnabled(!this.jMenu1.isEnabled());
         this.jMenu2.setEnabled(!this.jMenu2.isEnabled());
@@ -600,6 +624,7 @@ public class Principal_ui extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem18;
+    private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;

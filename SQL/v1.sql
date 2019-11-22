@@ -23,7 +23,7 @@ CREATE TABLE Cliente_cuenta (
 
 CREATE TABLE Cliente (
 	dpi INT NOT NULL,
-	nombre VARCHAR2(100) NOT NULL,	
+	nombre VARCHAR2(100) NOT NULL,
 	firma BLOB NULL, /* imagen */
 	foto BLOB NULL, /* imagen */
 	fecha_nacimiento DATE NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE Cuenta (
 );
 
 CREATE TABLE Cheque (
-	cheque INT NOT NULL, 
+	cheque INT NOT NULL,
 	fecha DATE NOT NULL,
 	monto FLOAT NOT NULL,
 	estado INT NOT NULL, /* 2: robado, 1:activo, 0:extraviado */
@@ -71,7 +71,9 @@ CREATE TABLE Transaccion (
 	tipo VARCHAR2(30) NOT NULL,--retiro o deposito
 	tipo_detalle VARCHAR2(30) NOT NULL,--cheque, efectivo, transferencia
 	detalle VARCHAR2(100) NOT NULL,
+	saldo_inicial FLOAT NOT NULL,
 	valor FLOAT NOT NULL,
+	saldo_final FLOAT NOT NULL,
 	Operador_id_operador INT NOT NULL,
 	PRIMARY KEY(numero)
 );
@@ -107,13 +109,13 @@ CREATE TABLE Rol (
 
 CREATE SEQUENCE agencia_seq START WITH 1000;
 CREATE SEQUENCE cuenta_seq START WITH 1000;
-CREATE SEQUENCE oper_seq START WITH 1000;   
+CREATE SEQUENCE oper_seq START WITH 1000;
 CREATE SEQUENCE cuenta_cuenta_seq START WITH 1000;
 CREATE SEQUENCE transaccion_seq START WITH 1000;
 
 
-CREATE OR REPLACE TRIGGER cuenta_cuenta_seq_trig 
-BEFORE INSERT ON cliente_cuenta 
+CREATE OR REPLACE TRIGGER cuenta_cuenta_seq_trig
+BEFORE INSERT ON cliente_cuenta
 FOR EACH ROW
 BEGIN
   SELECT agencia_seq.NEXTVAL
@@ -124,8 +126,8 @@ END;
 select cuenta_seq.nextval from dual;
 
 
-CREATE OR REPLACE TRIGGER agencia_seq_trig 
-BEFORE INSERT ON agencia 
+CREATE OR REPLACE TRIGGER agencia_seq_trig
+BEFORE INSERT ON agencia
 FOR EACH ROW
 BEGIN
   SELECT agencia_seq.NEXTVAL
@@ -134,8 +136,8 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE TRIGGER transaccion_seq_trig 
-BEFORE INSERT ON transaccion 
+CREATE OR REPLACE TRIGGER transaccion_seq_trig
+BEFORE INSERT ON transaccion
 FOR EACH ROW
 BEGIN
   SELECT transaccion_seq.NEXTVAL
@@ -144,13 +146,13 @@ BEGIN
 END;
 
 
-CREATE OR REPLACE TRIGGER oper_seq_trig 
-BEFORE INSERT ON operador 
+CREATE OR REPLACE TRIGGER oper_seq_trig
+BEFORE INSERT ON operador
 FOR EACH ROW
 BEGIN
   SELECT oper_seq.NEXTVAL
   INTO   :new.id_operador
   FROM   dual;
-END;	
+END;
 /
 

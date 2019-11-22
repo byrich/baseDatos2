@@ -79,19 +79,28 @@ SELECT cc.estado, cu.d, temp.monto, cu.cuenta, temp.no_cheque FROM cheque_cheque
 SELECT cuenta, no_cheque, monto 
     FROM Lote_Cheque where id_lote = lote and banco = idbanco and estado = 'Grabando'
 ) temp
-where cc.cheque = temp.no_cheque and c.id_cuenta = temp.cuenta
-and cc.chequera_chequera = c.id_chequera and cu.cuenta = temp.cuenta
+where cc.cheque = temp.no_cheque 
+and cc.chequera_chequera = c.id_chequera and cu.cuenta = c.id_cuenta
 and cu.estado = 2 and c.estado = 1 and cc.estado = 1;
 begin 
     Suma := 0;
     FOR cheques in cheques_verificacion
     LOOP
+    SAVEPOINT iniciotransf;
             IF cheques.d >= Suma + cheques.Monto THEN
                     Suma := Suma + cheques.monto;
+	            SELECT * FROM CUENTA for update;
                     Update Cuenta cu set cu.d = (cu.d - cheques.monto) where cu.cuenta  = cheques.cuenta;
+		    SELECT * FROM Lote_Cheque for update;
                     Update Lote_Cheque lq set lq.estado = 'Cobrado' where lq.cuenta = cheques.cuenta and lq.no_cheque = cheques.no_cheque and lq.id_lote = lote;
             END IF;
+    COMMIT;
+    
       END LOOP;
+          EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK to savepoint iniciotransf;
+            DBMS_OUTPUT.PUT_LINE(sqlcode);
 end;
 /
 

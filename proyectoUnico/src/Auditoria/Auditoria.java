@@ -1,7 +1,11 @@
 package Auditoria;
 
 import Controlador.conexion;
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -15,43 +19,7 @@ public class Auditoria extends javax.swing.JPanel {
      */
     public Auditoria() {
         initComponents();
-        
         db = conexion.getInstance();
-        //se consultan los datos
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) this.jTable1.getModel();
-        ResultSet rs = db.getTransaccion();
-        try {
-            int operacion = 0;
-            String tipoOperacion = "";
-            java.sql.Date fecha = null;
-            float saldoInicial, monto, saldoFinal;
-            String usuario, razonRechazo;
-            int noAutorizacion, noRechazo, cuenta, doc;
-            while (rs.next()) {
-                operacion = rs.getInt("transaccion");
-                tipoOperacion = rs.getString("tipo");
-                fecha = rs.getDate("fecha");
-                saldoInicial = rs.getFloat("saldo_inicial");
-                monto = rs.getFloat("valor");
-                saldoFinal = rs.getFloat("saldo_final");
-                usuario = rs.getString("usuario");
-                noAutorizacion = rs.getInt("autorizacion");
-                noRechazo = rs.getInt("no_rechazo");
-                razonRechazo = rs.getString("razon_rechazo");
-                cuenta = rs.getInt("cuenta");
-                doc = rs.getInt("doc");
-
-                model.addRow(new Object[]{
-                    operacion, tipoOperacion, fecha,
-                    saldoInicial, monto, saldoFinal,
-                    usuario, noAutorizacion, noRechazo,
-                    razonRechazo, cuenta, doc
-                });
-            }
-        }
-        catch(Exception e) {
-            System.out.println("No se pudieron leer algunas filas");
-        }
     }
 
     /**
@@ -72,7 +40,7 @@ public class Auditoria extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "operacion", "tipoOperacion", "fechaHora", "clase", "saldoInicial", "Monto", "saldoFinal", "usuario", "terminal", "noAutorizacion", "noRechazo", "razonRechazo", "cuenta", "doc"
+                "operacion", "tipoOperacion", "fechaHora", "saldoInicial", "Monto", "saldoFinal", "usuario", "cuenta"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -95,6 +63,91 @@ public class Auditoria extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    public void getData(){
+        //se consultan los datos
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) this.jTable1.getModel();
+        ResultSet rs = db.getTransaccion();
+        try {
+            int operacion = 0;
+            String tipoOperacion = "";
+            java.sql.Date fecha = null;
+            float saldoInicial, monto, saldoFinal;
+            String usuario, razonRechazo;
+            int noAutorizacion, noRechazo, cuenta, doc;
+            while (rs.next()) {
+                operacion = rs.getInt("numero");
+                tipoOperacion = rs.getString("tipo");
+                fecha = rs.getDate("fecha");
+                saldoInicial = rs.getFloat("saldo_inicial");
+                monto = rs.getFloat("valor");
+                saldoFinal = rs.getFloat("saldo_final");
+                usuario = rs.getString("Operador_id_operador");
+                cuenta = rs.getInt("id_cuenta");
+
+                model.addRow(new Object[]{
+                    operacion, tipoOperacion, fecha,
+                    saldoInicial, monto, saldoFinal,
+                    usuario, cuenta
+                });
+            }
+        }
+        catch(Exception e) {
+            System.out.println("No se pudieron leer algunas filas");
+        }
+    }
+    public void generarReporte() throws IOException {
+        String currentDir = System.getProperty("user.dir");
+        String rutaTemplate = currentDir + "\\ReportesTemplates\\reporteAuditoriaTemplate.html";
+        System.out.println(rutaTemplate);
+        /*  here it is my html template
+            C:\Users\C45ASP4311F\Dropbox\Ingenieria\Bases2\Proyecto1\baseDatos2\reporteAuditoria.html
+        */
+
+        String html = "";
+        ResultSet rs = db.getTransaccion();
+        try {
+            int operacion = 0;
+            String tipoOperacion = "";
+            java.sql.Date fecha = null;
+            float saldoInicial, monto, saldoFinal;
+            String usuario, razonRechazo;
+            int noAutorizacion, noRechazo, cuenta, doc;
+            while (rs.next()) {
+                operacion = rs.getInt("numero");
+                tipoOperacion = rs.getString("tipo");
+                fecha = rs.getDate("fecha");
+                saldoInicial = rs.getFloat("saldo_inicial");
+                monto = rs.getFloat("valor");
+                saldoFinal = rs.getFloat("saldo_final");
+                usuario = rs.getString("Operador_id_operador");
+                cuenta = rs.getInt("id_cuenta");
+
+                html += "<tr>\n";
+                html += "<td>" + operacion + "</td>\n";
+                html += "<td>" + tipoOperacion + "</td>\n";
+                html += "<td>" + fecha + "</td>\n";
+                html += "<td>" + saldoInicial + "</td>\n";
+                html += "<td>" + monto + "</td>\n";
+                html += "<td>" + saldoFinal + "</td>\n";
+                html += "<td>" + usuario + "</td>\n";
+                html += "<td>" + cuenta + "</td>\n";
+                html += "</tr>\n";
+            }
+        }
+        catch(Exception e) {
+            System.out.println("No se pudieron leer algunas filas");
+        }
+        
+        File htmlTemplateFile = new File(rutaTemplate);
+        String htmlString = FileUtils.readFileToString(htmlTemplateFile);
+        System.out.println(htmlString);
+        String title = "Reporte Auditoria";
+        htmlString = htmlString.replace("$title", title);
+        htmlString = htmlString.replace("$body", html);
+        File newHtmlFile = new File(currentDir + "\\Reportes\\reporteAuditoria.html");
+        FileUtils.writeStringToFile(newHtmlFile, htmlString);
+        JOptionPane.showMessageDialog(null, "Reporte auditoria generado");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
