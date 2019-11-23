@@ -34,7 +34,7 @@ begin
             DBMS_OUTPUT.PUT_LINE(sqlcode);
     return -1;
 end;
-
+/
 
 create or replace FUNCTION depositarEfectivo
     (
@@ -73,9 +73,9 @@ begin
             DBMS_OUTPUT.PUT_LINE(sqlcode);
     return -1;
 end;
+/
 
-
-create or replace FUNCTION trasnferencia
+create or replace FUNCTION transferencia
     (
     noCuenta1 int,
     noCuenta2 int,
@@ -128,8 +128,4 @@ begin
             DBMS_OUTPUT.PUT_LINE(sqlcode);
     return -1;
 end;
-
-
-
-
-
+/

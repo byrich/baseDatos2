@@ -9,6 +9,8 @@ import Agencias.editAgencia;
 import Agencias.regAgencia;
 import Auditoria.Auditoria;
 import Cheques.IngresoCheque;
+import Cheques.PagarCheque;
+import Cheques.PedirChequera;
 import Controlador.Agencia_sql;
 import Controlador.Cliente_sql;
 import Controlador.Compensacion_sql;
@@ -76,6 +78,7 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
+        jMenuItem22 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -90,6 +93,8 @@ public class Principal_ui extends javax.swing.JFrame {
         jMenu11 = new javax.swing.JMenu();
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem20 = new javax.swing.JMenuItem();
+        jMenuItem21 = new javax.swing.JMenuItem();
         jMenu13 = new javax.swing.JMenu();
         jMenuItem17 = new javax.swing.JMenuItem();
         jMenuItem19 = new javax.swing.JMenuItem();
@@ -194,6 +199,14 @@ public class Principal_ui extends javax.swing.JFrame {
 
         jMenu2.add(jMenu10);
 
+        jMenuItem22.setText("Pagar cheque");
+        jMenuItem22.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem22ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem22);
+
         jMenuBar1.add(jMenu2);
 
         jMenu5.setText("Operador");
@@ -285,6 +298,17 @@ public class Principal_ui extends javax.swing.JFrame {
             }
         });
         jMenu11.add(jMenuItem16);
+
+        jMenuItem20.setText("Solicitar chequera");
+        jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem20ActionPerformed(evt);
+            }
+        });
+        jMenu11.add(jMenuItem20);
+
+        jMenuItem21.setText("Bloquear cheque");
+        jMenu11.add(jMenuItem21);
 
         jMenuBar1.add(jMenu11);
 
@@ -545,6 +569,33 @@ public class Principal_ui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem19ActionPerformed
 
+    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
+        // TODO add your handling code here:
+        this.remove(actual);
+        this.repaint();
+        PedirChequera panel = new PedirChequera();
+        panel.setVisible(true);
+        actual = panel;
+        panel.cargarApi(apiCuenta);
+        this.add(panel);
+        panel.setBounds(0,0, 606, 351);
+        panel.updateUI();
+    }//GEN-LAST:event_jMenuItem20ActionPerformed
+
+    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
+        // TODO add your handling code here:
+        this.remove(actual);
+        this.repaint();
+        PagarCheque panel = new PagarCheque();
+        panel.setVisible(true);
+        actual = panel;
+        panel.cargarApi(apiCuenta);
+        panel.idOperador= this.idoperador;
+        this.add(panel);
+        panel.setBounds(0,0, 606, 351);
+        panel.updateUI();
+    }//GEN-LAST:event_jMenuItem22ActionPerformed
+
 
     public void activar(){
         this.jMenu1.setEnabled(!this.jMenu1.isEnabled());
@@ -626,6 +677,9 @@ public class Principal_ui extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem20;
+    private javax.swing.JMenuItem jMenuItem21;
+    private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

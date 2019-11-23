@@ -9,6 +9,7 @@ CREATE TABLE TransaccionChequeTmp (
 );
 
 CREATE SEQUENCE chequeTmp_seq START WITH 1000;
+
 CREATE OR REPLACE TRIGGER chequeTmp_seq_trig
 BEFORE INSERT ON TransaccionChequeTmp
 FOR EACH ROW
@@ -17,3 +18,4 @@ BEGIN
   INTO   :new.referencia
   FROM   dual;
 END;
+/

@@ -1,4 +1,24 @@
+DROP TABLE Cheque_Chequera;
 DROP TABLE Lote_Cheque;
+DROP TABLE chequera;
+DROP TABLE Cliente_cuenta;
+DROP TABLE Cliente;
+DROP TABLE Cuenta;
+DROP TABLE Cheque;
+DROP TABLE Lote;
+DROP TABLE Transaccion;
+DROP TABLE Agencia;
+DROP TABLE Operador;
+DROP TABLE Terminal;
+DROP TABLE Rol;
+
+CREATE TABLE Cheque_Chequera(
+    cheque int not null,
+    estado int,
+    chequera_chequera int,
+    primary key(cheque)
+);
+
 CREATE TABLE Lote_Cheque(
     banco int NOT NULL,
     referencia int NOT NULL,
@@ -11,6 +31,8 @@ CREATE TABLE Lote_Cheque(
 CREATE TABLE chequera (
 	id_chequera INT NOT NULL,
 	estado INT NOT NULL, /* 0:no entregado, 1:entregado*/
+	cuenta int,
+	correlativoInicio INT,
 	PRIMARY KEY(id_chequera)
 );
 
@@ -38,8 +60,8 @@ CREATE TABLE Cuenta (
 	S VARCHAR2(30) NULL,
 	R VARCHAR2(30) NULL,
 	D VARCHAR2(30) NULL,
-	Cantidad FLOAT check (valor > 0) NOT NULL, /* dinero disponible */
-	saldopendiente FLOAT check (valor > 0) NOT NULL, /* saldo de cheques */
+	Cantidad FLOAT check (Cantidad > 0) NOT NULL, /* dinero disponible */
+	saldopendiente FLOAT check (saldopendiente > 0) NOT NULL, /* saldo de cheques */
 	PRIMARY KEY(cuenta)
 );
 
@@ -111,8 +133,18 @@ CREATE SEQUENCE agencia_seq START WITH 1000;
 CREATE SEQUENCE cuenta_seq START WITH 1000;
 CREATE SEQUENCE oper_seq START WITH 1000;
 CREATE SEQUENCE cuenta_cuenta_seq START WITH 1000;
+CREATE SEQUENCE cheque_seq START WITH 1000;
 CREATE SEQUENCE transaccion_seq START WITH 1000;
 
+CREATE OR REPLACE TRIGGER cheque_chequera_seq_trig 
+BEFORE INSERT ON Cheque_Chequera 
+FOR EACH ROW
+BEGIN
+  SELECT cheque_seq.NEXTVAL
+  INTO   :new.cheque
+  FROM   dual;
+END;
+/
 
 CREATE OR REPLACE TRIGGER cuenta_cuenta_seq_trig
 BEFORE INSERT ON cliente_cuenta
@@ -122,7 +154,7 @@ BEGIN
   INTO   :new.id_cliente_cuenta
   FROM   dual;
 END;
-
+/
 select cuenta_seq.nextval from dual;
 
 
@@ -144,7 +176,7 @@ BEGIN
   INTO   :new.numero
   FROM   dual;
 END;
-
+/
 
 CREATE OR REPLACE TRIGGER oper_seq_trig
 BEFORE INSERT ON operador

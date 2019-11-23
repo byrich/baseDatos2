@@ -7,7 +7,6 @@ package Cuenta;
 
 
 import Controlador.Cuenta_sql;
-import Controlador.conexion;
 import Entidad.Cliente;
 import UI.Principal_ui;
 import java.awt.event.KeyAdapter;

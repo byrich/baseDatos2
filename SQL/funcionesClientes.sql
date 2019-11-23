@@ -18,6 +18,7 @@ begin
     end if;
     return -1;
 end;
+/
 
 CREATE or replace function getClientes 
     return SYS_REFCURSOR
@@ -27,7 +28,7 @@ begin
     open l_cursor for select * from cliente where estado = 1;
     return l_cursor;
 end;
-
+/
 
 CREATE or replace function getClientesB 
     return SYS_REFCURSOR
@@ -37,7 +38,7 @@ begin
     open l_cursor for select * from cliente where estado = 0;
     return l_cursor;
 end;
-
+/
 
 create or replace FUNCTION deletCliente
     (
@@ -55,6 +56,7 @@ begin
     end if;
     return -1;
 end;
+/
 
 create or replace FUNCTION upCliente
     (
@@ -72,7 +74,7 @@ begin
     end if;
     return -1;
 end;
-
+/
 
 create or replace FUNCTION editCliente
     (
@@ -93,3 +95,4 @@ begin
     end if;
     return -1;
 end;
+/

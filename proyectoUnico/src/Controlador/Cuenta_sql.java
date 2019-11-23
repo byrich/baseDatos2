@@ -6,11 +6,9 @@
 package Controlador;
 
 import Entidad.Cuenta;
-import Entidad.Operador;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
@@ -38,6 +36,7 @@ public class Cuenta_sql {
             return respuesta;
         } catch (SQLException ex) {
             // error dentro de la DB
+            System.out.println(ex);
             return -2;
         }
     }
@@ -58,6 +57,7 @@ public class Cuenta_sql {
             return respuesta;
         } catch (SQLException ex) {
             // error dentro de la DB
+            System.out.println(ex);
             return -2;
         }
     }
@@ -80,6 +80,7 @@ public class Cuenta_sql {
             return respuesta;
         } catch (SQLException ex) {
             // error dentro de la DB
+            System.out.println(ex);
             return -2;
         }
     }
@@ -159,5 +160,49 @@ public class Cuenta_sql {
             System.out.println(ex);
         }
         return retorno;
+    }
+    
+    public int pedirChequera(String numCuenta){
+        conexion global = conexion.getInstance();
+        try {
+            // llamada a la funcion
+            CallableStatement cstmt = global.conn.prepareCall("{ ? = call pedirChequera(?)}");
+            // parametros de entrada
+            cstmt.setString(2, numCuenta);
+            //retorno 
+            cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+            //ejecutamos...
+            cstmt.execute();
+            //capturamos resultado (1 logro registrar, -1 el usuario ya existe)
+            int respuesta = ((OracleCallableStatement)cstmt).getInt(1);
+            return respuesta;
+        } catch (SQLException ex) {
+            // error dentro de la DB
+            return -3;
+        }
+    }
+    
+    public int pagarCheque(String numCuenta,String numcheque,String idOperador,String canitdad){
+        conexion global = conexion.getInstance();
+        try {
+            // llamada a la funcion
+            CallableStatement cstmt = global.conn.prepareCall("{ ? = call retirarCheque(?,?,?,?)}");
+            // parametros de entrada
+            cstmt.setString(2, numCuenta);
+            cstmt.setString(3, idOperador);
+            cstmt.setString(4, numcheque);
+            cstmt.setString(5, canitdad);
+            //retorno 
+            cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+            //ejecutamos...
+            cstmt.execute();
+            //capturamos resultado (1 logro registrar, -1 el usuario ya existe)
+            int respuesta = ((OracleCallableStatement)cstmt).getInt(1);
+            return respuesta;
+        } catch (SQLException ex) {
+            // error dentro de la DB
+            System.out.println(ex);
+            return -1;
+        }
     }
 }
