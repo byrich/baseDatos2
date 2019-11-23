@@ -13,7 +13,7 @@ begin
     end if;
     return -1;
 end;
-
+/
 
 create or replace FUNCTION nuevaCuenta
     (
@@ -38,7 +38,7 @@ begin
     end if;
     return -1; -- ya tiene cuenta
 end;
-
+/
 
 create or replace FUNCTION bloquearCuenta
     (
@@ -57,7 +57,7 @@ begin
     end if;
     return -1; -- la cuenta ya no existe
 end;
-
+/
 
 create or replace FUNCTION deletCuenta
     (
@@ -76,7 +76,7 @@ begin
     end if;
     return -1; -- la cuenta ya no existe
 end;
-
+/
 
 CREATE or replace function getCuenta
     (
@@ -93,3 +93,4 @@ begin
     where c.estado = 2 and cc.cliente_dpi = eldpi and c.tipo = tipoCuenta;
     return l_cursor;
 end;
+/

@@ -92,9 +92,10 @@ public class PedirChequera extends javax.swing.JPanel {
         }
         else{
             int ret = api.pedirChequera(actual);
-            System.out.println(ret);
+
             if (ret == 1){
                 JOptionPane.showMessageDialog(null, "Chequera generada");
+
             }
             else if (ret == -2){
                 JOptionPane.showMessageDialog(null, "La cuenta: " +actual+ " no existe");

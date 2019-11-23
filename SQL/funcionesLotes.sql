@@ -22,6 +22,7 @@ begin
             DBMS_OUTPUT.PUT_LINE(sqlcode);
     return -1;
 end;
+/
 
 create or replace FUNCTION cantidadCheques
     (
@@ -37,6 +38,7 @@ begin
     return total;
 end;
 /
+
 create or replace FUNCTION montoLote
     (
     id_banco int,
@@ -50,6 +52,7 @@ begin
     SELECT SUM(MONTO) into total FROM Lote_Cheque WHERE BANCO = id_banco and ID_LOTE = id_lote;
     return total;
 end;
+/
 
 CREATE or replace function getChequesLote 
     (
@@ -64,6 +67,7 @@ begin
     select * from Lote_Cheque where banco = id_banco and id_lote = id_lote;
     return l_cursor;
 end;
+/
 
 create or replace Procedure Grabacion_Cheques
     (

@@ -13,7 +13,7 @@ begin
     values (newNombre,1,newPassword,newAgenciaId,newTerminalId,newRolId);
     return 1;
 end;
-
+/
 
 CREATE or replace function getOperadores 
     return SYS_REFCURSOR
@@ -27,6 +27,7 @@ begin
     where o.estado = 1;
     return l_cursor;
 end;
+/
 
 CREATE or replace function getAgencias 
     return SYS_REFCURSOR
@@ -36,6 +37,7 @@ begin
     open l_cursor for select * from agencia where estado = 1;
     return l_cursor;
 end;
+/
 
 CREATE or replace function getRoles 
     return SYS_REFCURSOR
@@ -45,7 +47,7 @@ begin
     open l_cursor for select * from rol where estado = 1;
     return l_cursor;
 end;
-
+/
 
 create or replace FUNCTION deletOperador
     (
@@ -63,7 +65,7 @@ begin
     end if;
     return -1;
 end;
-
+/
 
 create or replace FUNCTION editOperador
     (
@@ -86,6 +88,7 @@ begin
     end if;
     return -1;
 end;
+/
 
 create or replace FUNCTION login
 
@@ -106,3 +109,4 @@ begin
     end if;
     return -1;
 end;
+/

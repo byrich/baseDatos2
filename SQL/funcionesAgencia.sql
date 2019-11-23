@@ -8,6 +8,7 @@ begin
     Insert into agencia (nombre,estado) values (newNombre,1);
     return 1;
 end;
+/
 
 CREATE or replace function getAgencias 
     return SYS_REFCURSOR
@@ -17,6 +18,7 @@ begin
     open l_cursor for select * from agencia where estado = 1;
     return l_cursor;
 end;
+/
 
 create or replace FUNCTION deletAgencia
     (
@@ -34,7 +36,7 @@ begin
     end if;
     return -1;
 end;
-
+/
 
 create or replace FUNCTION editAgencia
     (
@@ -53,3 +55,4 @@ begin
     end if;
     return -1;
 end;
+/

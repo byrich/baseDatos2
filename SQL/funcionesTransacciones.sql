@@ -36,6 +36,7 @@ begin
     return -1;
 end;
 
+
 create or replace FUNCTION retirarCheque
     (
     noCuenta int,
@@ -115,10 +116,11 @@ begin
             DBMS_OUTPUT.PUT_LINE(sqlcode);
     return -1;
 end;
-
+/
 
 
 create or replace FUNCTION trasnferencia
+
     (
     noCuenta1 int,
     noCuenta2 int,
@@ -171,8 +173,4 @@ begin
             DBMS_OUTPUT.PUT_LINE(sqlcode);
     return -1;
 end;
-
-
-
-
-
+/

@@ -178,6 +178,7 @@ public class Cuenta_sql {
             return respuesta;
         } catch (SQLException ex) {
             // error dentro de la DB
+
             System.out.println(ex);
             return -3;
         }
