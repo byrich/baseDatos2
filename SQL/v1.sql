@@ -1,4 +1,13 @@
-DROP TABLE Lote_Cheque;
+--DROP TABLE Lote_Cheque;
+
+CREATE TABLE TransaccionChequeTmp (
+  referencia INT NOT NULL,
+  cuenta INT NOT NULL,
+  cheque INT NOT NULL,
+  monto FLOAT NOT NULL,
+  PRIMARY KEY(referencia)
+);
+
 CREATE TABLE Lote_Cheque(
     banco int NOT NULL,
     referencia int NOT NULL,
@@ -10,7 +19,7 @@ CREATE TABLE Lote_Cheque(
 
 CREATE TABLE chequera (
 	id_chequera INT NOT NULL,
-	estado INT NOT NULL, /* 0:no entregado, 1:entregado*/
+	cuenta_id INT NOT NULL,
 	PRIMARY KEY(id_chequera)
 );
 
@@ -31,27 +40,42 @@ CREATE TABLE Cliente (
 	PRIMARY KEY(dpi)
 );
 
+
 CREATE TABLE Cuenta (
 	cuenta INT NOT NULL,
 	estado INT NOT NULL, /* 2:activo, 1:bloqueado, 0:cancelado */
 	tipo INT NOT NULL, /* 1:monetaria, 0:ahorro */
 	S VARCHAR2(30) NULL,
 	R VARCHAR2(30) NULL,
-	D VARCHAR2(30) NULL,
-	Cantidad FLOAT check (valor > 0) NOT NULL, /* dinero disponible */
-	saldopendiente FLOAT check (valor > 0) NOT NULL, /* saldo de cheques */
+	D VARCHAR2(30) NULL,-- este ya no!!
+	Cantidad FLOAT check (Cantidad > 0), /* dinero disponible */
+	saldopendiente FLOAT check (saldopendiente > 0), /* saldo de cheques */
 	PRIMARY KEY(cuenta)
 );
 
-CREATE TABLE Cheque (
+CREATE TABLE Cheque_Chequera(
+    cheque int not null,
+    estado int, --4:cobrado, 3:blanco, 2: robado, 1:activo, 0:extraviado 
+    chequera_chequera int,
+    --agregado{
+    fecha DATE NOT NULL,
+    monto FLOAT NOT NULL,
+    --agregado}
+    primary key(cheque)
+);
+
+/*CREATE TABLE Cheque (
 	cheque INT NOT NULL,
 	fecha DATE NOT NULL,
 	monto FLOAT NOT NULL,
-	estado INT NOT NULL, /* 2: robado, 1:activo, 0:extraviado */
+	estado INT NOT NULL, 
+	detalle_estado VARCHAR2(50) NULL,
 	Cuenta_cuenta INT NOT NULL,
-	Lote_lote INT NOT NULL,
+	Lote_lote INT NULL,
+	chequera_id INT NULL,
 	PRIMARY KEY(cheque)
-);
+);*/
+
 
 CREATE TABLE Lote (
 	lote INT NOT NULL,
@@ -112,7 +136,18 @@ CREATE SEQUENCE cuenta_seq START WITH 1000;
 CREATE SEQUENCE oper_seq START WITH 1000;
 CREATE SEQUENCE cuenta_cuenta_seq START WITH 1000;
 CREATE SEQUENCE transaccion_seq START WITH 1000;
+CREATE SEQUENCE chequera_seq START WITH 1 increment by 25;
+CREATE SEQUENCE chequeTmp_seq START WITH 1000;
 
+
+CREATE OR REPLACE TRIGGER chequeTmp_seq_trig
+BEFORE INSERT ON TransaccionChequeTmp
+FOR EACH ROW
+BEGIN
+  SELECT chequeTmp_seq.NEXTVAL
+  INTO   :new.referencia
+  FROM   dual;
+END;
 
 CREATE OR REPLACE TRIGGER cuenta_cuenta_seq_trig
 BEFORE INSERT ON cliente_cuenta

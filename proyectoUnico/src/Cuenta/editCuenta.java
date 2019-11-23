@@ -205,7 +205,7 @@ public class editCuenta extends javax.swing.JPanel {
         else{
             Object ret[] = api.getCuenta(actual,this.jComboBox1.getSelectedIndex());
             if (ret[0] == null){
-                JOptionPane.showMessageDialog(null, "El usuario: "+actual+" no tiene cuenta");
+                JOptionPane.showMessageDialog(null, "El usuario: " + actual + " no tiene cuenta " + jComboBox1.getSelectedItem().toString());
             }
             encontrada = (Cuenta) ret[0];
             this.jTable1.setModel((DefaultTableModel) ret[1]);
